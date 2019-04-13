@@ -87,10 +87,6 @@ async function release(
   changelogPath,
   commit
 ) {
-  if (commit) {
-    // exec("git stash")
-  }
-
   // read data
   const packageJsonPath = join(process.cwd(), `package.json`)
   const packageJson = require(packageJsonPath);
@@ -158,7 +154,6 @@ async function release(
     // commit version bump
     await exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
     await exec(`git commit -m 'changelog' ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
-    // exec("git stash pop")
   }
 
   return true;
