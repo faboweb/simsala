@@ -1,6 +1,7 @@
 const { join, resolve } = require("path");
 const fs = require("fs");
 const semver = require("semver"); // only touches filesystem
+const groupBy = require("lodash/groupBy"); // only touches filesystem
 
 // collect all changes from files
 /* istanbul ignore next */ async function collectPending(changesPath) {
@@ -40,7 +41,7 @@ function beautifyChanges(changes) {
       content: matches[2]
     };
   });
-  const grouped = _.groupBy(categorized, `type`);
+  const grouped = groupBy(categorized, `type`);
 
   let output = ``;
   output = addCategory(output, `Added`, grouped);
@@ -73,6 +74,9 @@ function updateChangeLog(changeLog, pending, newVersion, now) {
 
   return insertedLines.join("\n");
 }
+
+const updatePackageJson = (packageJson, version) =>
+  Object.assign({}, packageJson, { version })
 
 async function release(
   versionIncrementType,
