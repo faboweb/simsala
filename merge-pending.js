@@ -88,7 +88,7 @@ async function release(
   commit
 ) {
   if (commit) {
-    exec("git stash")
+    // exec("git stash")
   }
 
   // read data
@@ -148,15 +148,17 @@ async function release(
   if (commit) {
     console.log("Committing changes")
     try {
-      exec(`git tag ${newVersion}`)
+      await exec(`git tag ${newVersion}`)
     } catch (err) {
+
+      
       console.error("Couldn't add tag", err)
       return
     }
     // commit version bump
-    exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
-    exec(`git commit -m 'changelog'`);
-    exec("git stash pop")
+    await exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
+    await exec(`git commit -m 'changelog' ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+    // exec("git stash pop")
   }
 
   return true;
