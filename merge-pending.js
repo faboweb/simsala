@@ -145,7 +145,7 @@ async function release(
     console.log("Committing changes")
     // commit version bump
     await exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
-    await exec(`git commit -m release ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+    await exec(`git commit -m release-${newVersion} ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
     try {
       await exec(`git tag ${newVersion}`)
     } catch (err) {
