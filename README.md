@@ -1,5 +1,12 @@
 # simsala
+
 Conflict free changelogs and simple release management
+
+## Installation
+
+```
+npm i -g simsala
+```
 
 ## Adding pending changes
 
@@ -42,4 +49,20 @@ Options:
   -b, --beta                             Is this a beta release?
   -s, --stage-only                       Stage version bump changes only instead of committing them
   -h, --help                             output usage information
+```
+
+## Develop
+
+To start `simsala` in development run:
+
+```
+yarn start
+```
+
+## Test
+
+To test `simsala` run:
+
+```
+yarn test
 ```
