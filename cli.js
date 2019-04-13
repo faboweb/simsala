@@ -47,9 +47,14 @@ program
     "Where are pending files located?",
     "./pending"
   )
-  .option("-c, --commit", "Commit pending changes", true)
+  .option("-s, --stage-only", "Stage changes only instead of committing them")
   .action(async function(options) {
-    logChanges(options.pendingPath, options.commit);
+    logChanges(options.pendingPath, !options.stageOnly);
   });
+
+// default to output help
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
 
 program.parse(process.argv);

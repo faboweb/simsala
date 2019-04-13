@@ -8,7 +8,7 @@ const changes = [];
 
 // main function to inquire about the pending changes
 const ask = async () => {
-  const answer = await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       type: `list`,
       name: `type`,
@@ -64,8 +64,9 @@ const ask = async () => {
           value: `none`
         }
       ]
-    },
-    {
+    }])
+  if (answers.referenceType !== 'none') {
+    Object.assign(answers, await inquirer.prompt({
       type: `input`,
       name: `referenceId`,
       message: `What is the id of the reference issue/PR on GitHub?`,
@@ -77,7 +78,9 @@ const ask = async () => {
       transformer(input) {
         return input.replace(`#`, ``);
       }
-    },
+    }))
+  }
+  Object.assign(answers, await inquirer.prompt([
     {
       type: `input`,
       name: `author`,
@@ -90,13 +93,14 @@ const ask = async () => {
     },
     {
       type: `confirm`,
-      name: `askAgain`,
+      name: `anotherChange`,
       message: `Want to enter another change?`,
       default: false
     }
-  ]);
-  changes.push(answer);
-  if (answer.askAgain) {
+  ]))
+
+  changes.push(answers);
+  if (answers.anotherChange) {
     await ask();
   }
 };
@@ -117,10 +121,8 @@ async function logChanges(pendingChangesPath, commit) {
     fs.mkdirSync(changesFolderPath);
   }
   const changeFileName = join(changesFolderPath, branch);
-  // if (fs.existsSync(changeFileName)) {
-  //   fs.unlinkSync(changeFileName)
-  // }
 
+  // handle existing pending changes file
   if (fs.existsSync(changeFileName)) {
     const keep = await inquirer.prompt({
       type: `list`,
@@ -141,8 +143,11 @@ async function logChanges(pendingChangesPath, commit) {
       fs.unlinkSync(changeFileName);
     }
   }
+
+  // inquire about changes to log
   await ask();
 
+  // build changes string
   const changelog = changes.reduce(
     (changelog, { type, content, author, referenceType, referenceId }) => {
       const referenceLink =
@@ -156,7 +161,7 @@ async function logChanges(pendingChangesPath, commit) {
     ``
   );
 
-  // write pending to file
+  // write changes to file
   if (fs.existsSync(changeFileName)) {
     fs.appendFileSync(changeFileName, changelog.trim(), "utf8");
   } else {
@@ -166,7 +171,7 @@ async function logChanges(pendingChangesPath, commit) {
   if (commit) {
     // commit changelog
     exec(`git add ${changeFileName}`);
-    exec(`git commit -m 'changelog' ${changeFileName}`);
+    exec(`git commit -m 'changelog' ${resolve(changeFileName)}`);
   }
 }
 
