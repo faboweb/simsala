@@ -124,7 +124,7 @@ async function logChanges(pendingChangesPath, commit) {
 
   // handle existing pending changes file
   if (fs.existsSync(changeFileName)) {
-    const keep = await inquirer.prompt({
+    const answers = await inquirer.prompt({
       type: `list`,
       name: `keep`,
       message: `Existing pending changes where found for your branch. How do you want to proceed?`,
@@ -139,7 +139,7 @@ async function logChanges(pendingChangesPath, commit) {
         }
       ]
     });
-    if (keep === "drop") {
+    if (answers.keep === "drop") {
       fs.unlinkSync(changeFileName);
     }
   }
@@ -163,7 +163,7 @@ async function logChanges(pendingChangesPath, commit) {
 
   // write changes to file
   if (fs.existsSync(changeFileName)) {
-    fs.appendFileSync(changeFileName, changelog.trim(), "utf8");
+    fs.appendFileSync(changeFileName, '\n' + changelog.trim(), "utf8");
   } else {
     fs.writeFileSync(changeFileName, changelog.trim(), "utf8");
   }
