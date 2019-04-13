@@ -170,8 +170,8 @@ async function logChanges(pendingChangesPath, commit) {
 
   if (commit) {
     // commit changelog
-    exec(`git add ${changeFileName}`);
-    exec(`git commit -m changelog ${resolve(changeFileName)}`);
+    await exec(`git add ${changeFileName}`);
+    await exec(`git commit -m changelog ${resolve(changeFileName)}`);
   }
 }
 
