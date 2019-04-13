@@ -23,12 +23,14 @@ program
     "./CHANGELOG.md"
   )
   .option("-b, --beta", "Is this a beta release?", false)
+  .option("-s, --stage-only", "Stage version bump changes only instead of committing them")
   .action(async function(options) {
     const changesFound = await release(
       options.semver,
       options.beta,
       options.pendingPath,
-      options.changelogPath
+      options.changelogPath,
+      !options.stageOnly
     );
     if (!changesFound) {
       console.log(

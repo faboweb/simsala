@@ -1,7 +1,9 @@
 const { join, resolve } = require("path");
 const fs = require("fs");
-const semver = require("semver"); // only touches filesystem
-const groupBy = require("lodash/groupBy"); // only touches filesystem
+const semver = require("semver");
+const groupBy = require("lodash/groupBy")
+const { promisify } = require(`util`);
+const exec = promisify(require(`child_process`).exec);
 
 // collect all changes from files
 /* istanbul ignore next */ async function collectPending(changesPath) {
@@ -82,10 +84,12 @@ async function release(
   versionIncrementType,
   isBetaRelease,
   pendingChangesPath,
-  changelogPath
+  changelogPath,
+  commit
 ) {
   // read data
-  const packageJson = require(join(process.cwd(), `package.json`));
+  const packageJsonPath = join(process.cwd(), `package.json`)
+  const packageJson = require(packageJsonPath);
 
   changelogPath = resolve(changelogPath);
   if (!fs.existsSync(changelogPath)) {
@@ -121,11 +125,11 @@ async function release(
   const newPackageJson = updatePackageJson(packageJson, newVersion);
 
   // write updates
-  console.log("Updating CHANGELOG.md");
-  fs.writeFileSync(join(process.cwd(), `CHANGELOG.md`), newChangeLog, `utf8`);
+  console.log(`Updating ${changelogPath}`);
+  fs.writeFileSync(changelogPath, newChangeLog, `utf8`);
   console.log("Updating package.json");
   fs.writeFileSync(
-    join(process.cwd(), `package.json`),
+    packageJsonPath,
     JSON.stringify(newPackageJson, null, 2) + `\n`,
     `utf8`
   );
@@ -136,6 +140,13 @@ async function release(
   files.forEach(file => {
     fs.unlinkSync(join(pendingChangesPath, file));
   });
+
+  if (commit) {
+    exec(`git tag ${newVersion}`)
+    // commit version bump
+    exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
+    exec(`git commit -m 'changelog' ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+  }
 
   return true;
 }
