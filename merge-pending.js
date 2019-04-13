@@ -143,17 +143,14 @@ async function release(
 
   if (commit) {
     console.log("Committing changes")
-    try {
-      await exec(`git tag ${newVersion}`)
-    } catch (err) {
-
-      
-      console.error("Couldn't add tag", err)
-      return
-    }
     // commit version bump
     await exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
     await exec(`git commit -m 'changelog' ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+    try {
+      await exec(`git tag ${newVersion}`)
+    } catch (err) {
+      console.error("Couldn't add tag", err)
+    }
   }
 
   return true;
