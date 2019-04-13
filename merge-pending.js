@@ -60,21 +60,23 @@ function updateChangeLog(changeLog, pending, newVersion, now) {
 
   const lines = changeLog.split("\n");
   const anchorIndex = lines.findIndex(line =>
-    line.startsWith("<!-- SAMSARA -->")
+    line.startsWith("<!-- SIMSALA -->")
   );
   if (anchorIndex === -1) {
     throw new Error(
-      "CHANGELOG.md was edited and is missing '<!-- SAMSARA --' which is needed to calculate the top of the changelog."
+      "CHANGELOG.md was edited and is missing '<!-- SIMSALA -->' which is needed to calculate the top of the changelog."
     );
   }
 
-  const insertedLines = lines
-    // insert the pending changes
-    .splice(anchorIndex, 0, pending.split("\n"))
+  lines
+  .splice(anchorIndex + 1, 0, 
+    '', // resolves to a linebreak
     // insert a sub header with version and date
-    .splice(anchorIndex, 0, `## [${newVersion}] - ${today}\n\n`);
+    `## [${newVersion}] - ${today}\n`, 
+    // insert the pending changes
+    ...pending.split("\n"))
 
-  return insertedLines.join("\n");
+  return lines.join("\n");
 }
 
 const updatePackageJson = (packageJson, version) =>
@@ -161,5 +163,6 @@ module.exports = {
   beautifyChanges,
   addCategory,
   collectPending,
-  release
+  release,
+  updatePackageJson
 };
