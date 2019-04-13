@@ -154,8 +154,8 @@ async function logChanges(pendingChangesPath, commit) {
         referenceType === "none"
           ? ""
           : // eslint-disable-next-line no-useless-escape
-            `[\#${referenceId}](https://github.com/cosmos/lunie/${referenceType}/${referenceId})`;
-      changelog += `[${type}] ${referenceLink} ${content} @${author}\n`;
+            `[\#${referenceId}](https://github.com/cosmos/lunie/${referenceType}/${referenceId}) `;
+      changelog += `[${type}] ${referenceLink}${content} @${author}\n`;
       return changelog;
     },
     ``
