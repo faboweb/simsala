@@ -1,5 +1,5 @@
 {
-  "name": "simsalog",
+  "name": "simsala",
   "version": "0.0.2",
   "description": "Conflict free changelogs and release management",
   "main": "cli.js",
