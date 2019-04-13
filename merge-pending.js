@@ -87,6 +87,10 @@ async function release(
   changelogPath,
   commit
 ) {
+  if (commit) {
+    exec("git stash")
+  }
+
   // read data
   const packageJsonPath = join(process.cwd(), `package.json`)
   const packageJson = require(packageJsonPath);
@@ -142,10 +146,17 @@ async function release(
   });
 
   if (commit) {
-    exec(`git tag ${newVersion}`)
+    console.log("Committing changes")
+    try {
+      exec(`git tag ${newVersion}`)
+    } catch (err) {
+      console.error("Couldn't add tag", err)
+      return
+    }
     // commit version bump
     exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
-    exec(`git commit -m 'changelog' ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+    exec(`git commit -m 'changelog'`);
+    exec("git stash pop")
   }
 
   return true;
