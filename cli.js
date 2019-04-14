@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var program = require("commander");
+const program = require("commander");
 const { release, incrementVersion } = require("./release");
 const { createReleaseCandidate } = require("./release-candidate");
 const { logChanges } = require("./add-pending");
@@ -20,6 +20,12 @@ function getNewVersion() {
   console.log(`New version:`, newVersion);
 
   return newVersion;
+}
+
+function noChanges(pendingPath) {
+  console.log(
+    `No pending changes where found at ${pendingPath}. Not proceeding with release.`
+  );
 }
 
 const releaseCommonOptions = command =>
@@ -57,26 +63,27 @@ releaseCommonOptions(program.command("release"))
     );
 
     if (!changes) {
-      console.log(
-        `No pending changes where found at ${
-          options.pendingPath
-        }. Not proceeding with release.`
-      );
-      return;
+      noChanges(options.pendingPath);
     }
   });
 
 releaseCommonOptions(program.command("release-candidate"))
-  .option("-r, --repository <repository>", "Name of the repo.")
   .option(
     "-o, --owner <owner>",
     "Name of the owner or organization of the repository."
   )
+  .option("-r, --repository <repository>", "Name of the repo.")
   .option(
     "-t, --token <github auth token>",
     "Token to authenticate to GitHub (to push chages)."
   )
   .action(async function(options) {
+    if (!options.owner || !options.repository) {
+      console.error(
+        "To create a release candidate PR, you need to provide '--owner' and '--repository'."
+      );
+      return;
+    }
     const newVersion = getNewVersion(options.semver, options.beta);
     const { changes } = createReleaseCandidate(
       newVersion,
@@ -88,12 +95,7 @@ releaseCommonOptions(program.command("release-candidate"))
     );
 
     if (!changes) {
-      console.log(
-        `No pending changes where found at ${
-          options.pendingPath
-        }. Not proceeding with release.`
-      );
-      return;
+      noChanges(options.pendingPath);
     }
   });
 
