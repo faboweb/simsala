@@ -1,5 +1,0 @@
-[Changed] Changed name to simsala @faboweb
-[Fixed] Fixed changes addition committing bug @faboweb
-[Fixed] Fixed tests @faboweb
-[Added] Added check if pending got updated (for CI) @faboweb
-[Added] Added release candidate PR option @faboweb
