@@ -98,6 +98,9 @@ const updatePackageJson = (packageJson, version) =>
   Object.assign({}, packageJson, { version });
 
 async function release(newVersion, pendingChangesPath, changelogPath, commit) {
+  const packageJsonPath = join(process.cwd(), `package.json`);
+  const packageJson = require(packageJsonPath);
+
   changelogPath = resolve(changelogPath);
   if (!fs.existsSync(changelogPath)) {
     console.log("No CHANGELOG.md was found. Creating it.");

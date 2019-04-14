@@ -86,7 +86,7 @@ releaseCommonOptions(program.command("release-candidate"))
       return;
     }
     const newVersion = getNewVersion(options.semver, options.beta);
-    const { changes } = createReleaseCandidate(
+    const { changes } = await createReleaseCandidate(
       newVersion,
       options.pendingPath,
       options.changelogPath,

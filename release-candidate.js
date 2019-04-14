@@ -38,7 +38,7 @@ async function createReleaseCandidate(
     });
   }
 
-  await exec(`git checkout -b ${branch}`);
+  await exec(`git checkout -B ${branch}`);
 
   const { changes } = await release(
     newVersion,
