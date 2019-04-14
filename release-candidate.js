@@ -5,10 +5,7 @@ const { release } = require(`./release`);
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
 
-const createPullRequest = async (
-  octokit,
-  { changes, tag, head, owner, repo }
-) => {
+async function createPullRequest(octokit, { changes, tag, head, owner, repo }) {
   await octokit.pullRequests.create({
     owner,
     repo,
@@ -18,7 +15,7 @@ const createPullRequest = async (
     body: changes,
     maintainer_can_modify: true
   });
-};
+}
 
 async function createReleaseCandidate(
   newVersion,

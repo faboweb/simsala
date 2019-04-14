@@ -1,27 +1,11 @@
 #!/usr/bin/env node
 
 const program = require("commander");
-const { release, incrementVersion } = require("./release");
+const { release } = require("./release");
 const { createReleaseCandidate } = require("./release-candidate");
 const { logChanges } = require("./add-pending");
 const { checkPendingAdded } = require("./pending-added-check");
-const { join } = require("path");
-
-function getNewVersion(versionIncrementType, isBetaRelease) {
-  const packageJsonPath = join(process.cwd(), `package.json`);
-  const packageJson = require(packageJsonPath);
-  const oldVersion = packageJson.version;
-
-  // calculate new data
-  const newVersion = incrementVersion(
-    oldVersion,
-    versionIncrementType,
-    isBetaRelease
-  );
-  console.log(`New version:`, newVersion);
-
-  return newVersion;
-}
+const { getNewVersion } = require("./version");
 
 function noChanges(pendingPath) {
   console.log(
@@ -148,5 +132,5 @@ module.exports = {
   logChanges,
   release,
   checkPendingAdded,
-  incrementVersion
+  getNewVersion
 };

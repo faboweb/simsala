@@ -1,6 +1,5 @@
 const { join, resolve } = require("path");
 const fs = require("fs");
-const semver = require("semver");
 const groupBy = require("lodash/groupBy");
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
@@ -54,18 +53,6 @@ function beautifyChanges(changes) {
   output = addCategory(output, `Deprecated`, grouped);
 
   return output.trim();
-}
-
-function incrementVersion(
-  oldVersion,
-  versionIncrementType = "patch",
-  isBetaRelease = false
-) {
-  return semver.inc(
-    oldVersion,
-    versionIncrementType,
-    isBetaRelease ? "beta" : undefined
-  );
 }
 
 function updateChangeLog(changeLog, pending, newVersion, now) {
@@ -174,6 +161,5 @@ module.exports = {
   addCategory,
   collectPending,
   release,
-  updatePackageJson,
-  incrementVersion
+  updatePackageJson
 };
