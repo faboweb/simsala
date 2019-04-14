@@ -5,8 +5,9 @@ const { release, incrementVersion } = require("./release");
 const { createReleaseCandidate } = require("./release-candidate");
 const { logChanges } = require("./add-pending");
 const { checkPendingAdded } = require("./pending-added-check");
+const { join } = require("path");
 
-function getNewVersion() {
+function getNewVersion(versionIncrementType, isBetaRelease) {
   const packageJsonPath = join(process.cwd(), `package.json`);
   const packageJson = require(packageJsonPath);
   const oldVersion = packageJson.version;
