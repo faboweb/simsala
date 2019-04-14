@@ -1,12 +1,13 @@
 const { join, resolve } = require("path");
 const fs = require("fs");
 const semver = require("semver");
-const groupBy = require("lodash/groupBy")
+const groupBy = require("lodash/groupBy");
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
 
 // collect all changes from files
-/* istanbul ignore next */ async function collectPending(changesPath) {
+/* istanbul ignore next */
+async function collectPending(changesPath) {
   if (!fs.existsSync(changesPath)) {
     return "";
   }
@@ -55,6 +56,18 @@ function beautifyChanges(changes) {
   return output.trim();
 }
 
+function incrementVersion(
+  oldVersion,
+  versionIncrementType = "patch",
+  isBetaRelease = false
+) {
+  return semver.inc(
+    oldVersion,
+    versionIncrementType,
+    isBetaRelease ? "beta" : undefined
+  );
+}
+
 function updateChangeLog(changeLog, pending, newVersion, now) {
   const today = now.toISOString().slice(0, 10);
 
@@ -68,31 +81,23 @@ function updateChangeLog(changeLog, pending, newVersion, now) {
     );
   }
 
-  lines
-  .splice(anchorIndex + 1, 0, 
-    '', // resolves to a linebreak
+  lines.splice(
+    anchorIndex + 1,
+    0,
+    "", // resolves to a linebreak
     // insert a sub header with version and date
-    `## [${newVersion}] - ${today}\n`, 
+    `## [${newVersion}] - ${today}\n`,
     // insert the pending changes
-    ...pending.split("\n"))
+    ...pending.split("\n")
+  );
 
   return lines.join("\n");
 }
 
 const updatePackageJson = (packageJson, version) =>
-  Object.assign({}, packageJson, { version })
+  Object.assign({}, packageJson, { version });
 
-async function release(
-  versionIncrementType,
-  isBetaRelease,
-  pendingChangesPath,
-  changelogPath,
-  commit
-) {
-  // read data
-  const packageJsonPath = join(process.cwd(), `package.json`)
-  const packageJson = require(packageJsonPath);
-
+async function release(newVersion, pendingChangesPath, changelogPath, commit) {
   changelogPath = resolve(changelogPath);
   if (!fs.existsSync(changelogPath)) {
     console.log("No CHANGELOG.md was found. Creating it.");
@@ -105,18 +110,8 @@ async function release(
 
   const changeLog = fs.readFileSync(changelogPath, `utf8`);
   const pending = await collectPending(pendingChangesPath);
-  if (!pending) return false;
+  if (!pending) return { changes: null };
   const beautifiedPending = beautifyChanges(pending);
-
-  const oldVersion = packageJson.version;
-
-  // calculate new data
-  const newVersion = semver.inc(
-    oldVersion,
-    versionIncrementType,
-    isBetaRelease ? "beta" : undefined
-  );
-  console.log(`New version:`, newVersion);
 
   const newChangeLog = updateChangeLog(
     changeLog,
@@ -144,18 +139,30 @@ async function release(
   });
 
   if (commit) {
-    console.log("Committing changes")
+    console.log("Committing changes");
+
+    const tag = `v${newVersion}`;
+
     // commit version bump
-    await exec(`git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`);
-    await exec(`git commit -m release-${newVersion} ${resolve(pendingChangesPath)} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`);
+    await exec(
+      `git add ${pendingChangesPath} ${changelogPath} ${packageJsonPath}`
+    );
+    await exec(
+      `git commit -m release-${newVersion} ${resolve(
+        pendingChangesPath
+      )} ${resolve(changelogPath)} ${resolve(packageJsonPath)}`
+    );
     try {
-      await exec(`git tag ${newVersion}`)
+      await exec(`git tag ${tag}`);
     } catch (err) {
-      console.error("Couldn't add tag", err)
+      console.error("Couldn't add tag", err);
     }
   }
 
-  return true;
+  return {
+    version: newVersion,
+    changes: beautifiedPending
+  };
 }
 
 module.exports = {
@@ -164,5 +171,6 @@ module.exports = {
   addCategory,
   collectPending,
   release,
-  updatePackageJson
+  updatePackageJson,
+  incrementVersion
 };

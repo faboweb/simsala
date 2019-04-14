@@ -6,7 +6,7 @@ const {
   collectPending,
   addCategory,
   updatePackageJson
-} = require(`./merge-pending`);
+} = require(`./release`);
 
 it(`updates CHANGELOG`, () => {
   const previous = `# Changelog
