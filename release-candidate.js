@@ -1,20 +1,22 @@
-"use strict";
-
-const Octokit = require(`@octokit/rest`);
 const { release } = require(`./release`);
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
+const axios = require("axios");
 
-async function createPullRequest(octokit, { changes, tag, head, owner, repo }) {
-  await octokit.pullRequests.create({
-    owner,
-    repo,
-    title: `[Simsala] automatic release created for ${tag}`,
-    head,
-    base: `master`,
-    body: changes,
-    maintainer_can_modify: true
-  });
+async function createPullRequest({ changes, tag, head, owner, repo, token }) {
+  axios.defaults.headers.common["Authorization"] = `token ${token}`;
+  await axios
+    .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+      title: `[Simsala] automatic release created for ${tag}`,
+      head,
+      base: `master`,
+      body: changes,
+      maintainer_can_modify: true
+    })
+    .catch(err => {
+      console.error(err);
+      throw err;
+    });
 }
 
 async function createReleaseCandidate(
@@ -27,10 +29,6 @@ async function createReleaseCandidate(
 ) {
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
-
-  const authenticatedClient = new Octokit({
-    auth: `token ${token}`
-  });
 
   const currentBranch = (await exec(
     `git rev-parse --abbrev-ref HEAD`
@@ -50,7 +48,7 @@ async function createReleaseCandidate(
       return { changes: null };
     }
 
-    await createPullRequest(authenticatedClient, {
+    await createPullRequest({
       changes,
       token,
       tag,

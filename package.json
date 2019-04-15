@@ -17,7 +17,7 @@
   "author": "faboweber@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "@octokit/rest": "^16.24.1",
+    "axios": "^0.18.0",
     "commander": "^2.20.0",
     "inquirer": "^6.2.2",
     "semver": "^6.0.0"
