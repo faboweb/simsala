@@ -1,3 +1,5 @@
+<img src="header.png" />
+
 # simsala
 
 Conflict free changelogs and simple release management
