@@ -31,5 +31,8 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "bin": {
+    "simsala": "./src/cli.js"
   }
 }
