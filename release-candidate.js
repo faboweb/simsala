@@ -30,6 +30,18 @@ async function createReleaseCandidate(
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
 
+  if (!owner || !repo) {
+    console.log("Guessing GitHub repository from remote 'origin'.");
+    const origin = (await exec("git remote get-url origin")).stdout.trim();
+    const match = /https:\/\/github\.com\/(.+)\/(.+)\.git/.exec(origin);
+    if (match.length === 0) {
+      console.error("Git remote 'origin' is not a GitHub repository");
+      return { changes: null };
+    }
+    owner = match[1];
+    repo = match[2];
+  }
+
   const currentBranch = (await exec(
     `git rev-parse --abbrev-ref HEAD`
   )).stdout.trim();
