@@ -63,9 +63,16 @@ releaseCommonOptions(program.command("release-candidate"))
     "Token to authenticate to GitHub (to push chages)."
   )
   .action(async function(options) {
-    if (!options.owner || !options.repository) {
+    if (!options.owner || !options.repository || !options.token) {
       console.error(
         "To create a release candidate PR, you need to provide '--owner' and '--repository'."
+      );
+      return;
+    }
+    const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
+    if (!token) {
+      console.error(
+        "To create a release candidate PR, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
       );
       return;
     }

@@ -1,6 +1,6 @@
 "use strict";
 
-const octokit = require(`@octokit/rest`)();
+const Octokit = require(`@octokit/rest`);
 const { release } = require(`./release`);
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
@@ -28,12 +28,9 @@ async function createReleaseCandidate(
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
 
-  if (token) {
-    octokit.authenticate({
-      type: `token`,
-      token
-    });
-  }
+  const authenticatedClient = new Octokit({
+    auth: `token ${token}`
+  });
 
   const currentBranch = (await exec(
     `git rev-parse --abbrev-ref HEAD`
@@ -53,7 +50,7 @@ async function createReleaseCandidate(
       return { changes: null };
     }
 
-    await createPullRequest(octokit, {
+    await createPullRequest(authenticatedClient, {
       changes,
       token,
       tag,
