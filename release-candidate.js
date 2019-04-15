@@ -35,23 +35,36 @@ async function createReleaseCandidate(
     });
   }
 
+  const currentBranch = (await exec(
+    `git rev-parse --abbrev-ref HEAD`
+  )).stdout.trim();
+
   await exec(`git checkout -B ${branch}`);
 
-  const { changes } = await release(
-    newVersion,
-    pendingChangesPath,
-    changelogPath,
-    false
-  );
+  try {
+    const { changes } = await release(
+      newVersion,
+      pendingChangesPath,
+      changelogPath,
+      false
+    );
 
-  await createPullRequest(octokit, {
-    changes,
-    token,
-    tag,
-    head: branch,
-    owner,
-    repo
-  });
+    if (changes === null) {
+      return { changes: null };
+    }
+
+    await createPullRequest(octokit, {
+      changes,
+      token,
+      tag,
+      head: branch,
+      owner,
+      repo
+    });
+  } finally {
+    // return to the old branch
+    await exec(`git checkout ${currentBranch}`);
+  }
 }
 
 module.exports = {

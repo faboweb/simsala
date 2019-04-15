@@ -7,8 +7,8 @@ const exec = promisify(require(`child_process`).exec);
 // collect all changes from files
 /* istanbul ignore next */
 async function collectPending(changesPath) {
-  if (!fs.existsSync(changesPath)) {
-    return "";
+  if (fs.readdirSync(changesPath).length === 0) {
+    return [];
   }
   const files = await fs.readdirSync(changesPath);
   const allChanges = files.map(file => {
@@ -34,7 +34,12 @@ function addCategory(output, category, groupedLines) {
 // stitch all changes into one nice changelog
 // changes is an array of the content from all individual changelogs
 function beautifyChanges(changes) {
-  const lines = changes.join(`\n`).split(`\n`);
+  const lines = changes
+    .join(`\n`)
+    .split(`\n`)
+    // defensive cleanup
+    .map(line => line.trim())
+    .filter(line => line !== "");
 
   const categorized = lines.map(line => {
     const matches = /\[(\w+)\] (.+)/.exec(line);
@@ -100,7 +105,7 @@ async function release(newVersion, pendingChangesPath, changelogPath, commit) {
 
   const changeLog = fs.readFileSync(changelogPath, `utf8`);
   const pending = await collectPending(pendingChangesPath);
-  if (!pending) return { changes: null };
+  if (pending.length === 0) return { changes: null };
   const beautifiedPending = beautifyChanges(pending);
 
   const newChangeLog = updateChangeLog(
