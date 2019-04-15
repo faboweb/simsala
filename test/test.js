@@ -6,7 +6,7 @@ const {
   collectPending,
   addCategory,
   updatePackageJson
-} = require(`./release`);
+} = require(`../src/release`);
 
 it(`updates CHANGELOG`, () => {
   const previous = `# Changelog

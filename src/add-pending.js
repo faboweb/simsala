@@ -64,40 +64,47 @@ const ask = async () => {
           value: `none`
         }
       ]
-    }])
-  if (answers.referenceType !== 'none') {
-    Object.assign(answers, await inquirer.prompt({
-      type: `input`,
-      name: `referenceId`,
-      message: `What is the id of the reference issue/PR on GitHub?`,
-      validate: function(value) {
-        if (value) return true;
-
-        return `You need to specify the GitHub reference.`;
-      },
-      transformer(input) {
-        return input.replace(`#`, ``);
-      }
-    }))
-  }
-  Object.assign(answers, await inquirer.prompt([
-    {
-      type: `input`,
-      name: `author`,
-      message: `What is your GitHub handle?`,
-      validate: function(value) {
-        if (value) return true;
-
-        return `You need to specify your GitHub handle.`;
-      }
-    },
-    {
-      type: `confirm`,
-      name: `anotherChange`,
-      message: `Want to enter another change?`,
-      default: false
     }
-  ]))
+  ]);
+  if (answers.referenceType !== "none") {
+    Object.assign(
+      answers,
+      await inquirer.prompt({
+        type: `input`,
+        name: `referenceId`,
+        message: `What is the id of the reference issue/PR on GitHub?`,
+        validate: function(value) {
+          if (value) return true;
+
+          return `You need to specify the GitHub reference.`;
+        },
+        transformer(input) {
+          return input.replace(`#`, ``);
+        }
+      })
+    );
+  }
+  Object.assign(
+    answers,
+    await inquirer.prompt([
+      {
+        type: `input`,
+        name: `author`,
+        message: `What is your GitHub handle?`,
+        validate: function(value) {
+          if (value) return true;
+
+          return `You need to specify your GitHub handle.`;
+        }
+      },
+      {
+        type: `confirm`,
+        name: `anotherChange`,
+        message: `Want to enter another change?`,
+        default: false
+      }
+    ])
+  );
 
   changes.push(answers);
   if (answers.anotherChange) {
@@ -107,14 +114,16 @@ const ask = async () => {
 
 async function logChanges(pendingChangesPath, commit) {
   // use branch name to avoid conflicts on changes entries
-  let branch = ''
+  let branch = "";
   try {
     branch = (await exec(`git rev-parse --abbrev-ref HEAD`)).stdout
       .trim()
       .replace(/\//g, `_`);
   } catch (err) {
-    console.error("Couldn't get the branch name. Is this a .git repository (required)?")
-    return
+    console.error(
+      "Couldn't get the branch name. Is this a .git repository (required)?"
+    );
+    return;
   }
   const changesFolderPath = resolve(pendingChangesPath);
   if (!fs.existsSync(changesFolderPath)) {
@@ -163,7 +172,7 @@ async function logChanges(pendingChangesPath, commit) {
 
   // write changes to file
   if (fs.existsSync(changeFileName)) {
-    fs.appendFileSync(changeFileName, '\n' + changelog.trim(), "utf8");
+    fs.appendFileSync(changeFileName, "\n" + changelog.trim(), "utf8");
   } else {
     fs.writeFileSync(changeFileName, changelog.trim(), "utf8");
   }
