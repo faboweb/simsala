@@ -53,10 +53,10 @@ Options:
 
 ## Release Candidate
 
-In a colaborative flow you might want to create a PR for any release so your colleagues can approve the release. Simsala provides a command to create a release PR.
+In a colaborative flow you might want to create a PR for any release so your colleagues can approve the release. Simsala provides a command to create a release PR. You need to provide a GitHub access token either by `--token` or via a `GITHUB_ACCESS_TOKEN` environment variable.
 
 ```
-simsala release-candidate
+simsala release-candidate --token <github access token>
 ```
 
 Options:
