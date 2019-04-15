@@ -1,20 +1,22 @@
-"use strict";
-
-const octokit = require(`@octokit/rest`)();
 const { release } = require(`./release`);
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
+const axios = require("axios");
 
-async function createPullRequest(octokit, { changes, tag, head, owner, repo }) {
-  await octokit.pullRequests.create({
-    owner,
-    repo,
-    title: `[Simsala] automatic release created for ${tag}`,
-    head,
-    base: `master`,
-    body: changes,
-    maintainer_can_modify: true
-  });
+async function createPullRequest({ changes, tag, head, owner, repo, token }) {
+  axios.defaults.headers.common["Authorization"] = `token ${token}`;
+  await axios
+    .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+      title: `[Simsala] automatic release created for ${tag}`,
+      head,
+      base: `master`,
+      body: changes,
+      maintainer_can_modify: true
+    })
+    .catch(err => {
+      console.error(err);
+      throw err;
+    });
 }
 
 async function createReleaseCandidate(
@@ -28,32 +30,31 @@ async function createReleaseCandidate(
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
 
-  if (token) {
-    octokit.authenticate({
-      type: `token`,
-      token
-    });
-  }
-
   const currentBranch = (await exec(
     `git rev-parse --abbrev-ref HEAD`
   )).stdout.trim();
 
   await exec(`git checkout -B ${branch}`);
 
+  let changes;
   try {
-    const { changes } = await release(
+    const releaseInfos = await release(
       newVersion,
       pendingChangesPath,
       changelogPath,
-      false
+      true
     );
+    changes = releaseInfos.changes;
 
     if (changes === null) {
       return { changes: null };
     }
 
-    await createPullRequest(octokit, {
+    console.log("Pushing changes");
+    await exec(`git push --set-upstream origin ${branch}`);
+
+    console.log("Creating PR");
+    await createPullRequest({
       changes,
       token,
       tag,
@@ -63,8 +64,13 @@ async function createReleaseCandidate(
     });
   } finally {
     // return to the old branch
-    await exec(`git checkout ${currentBranch}`);
+    await exec(`git checkout -f ${currentBranch}`);
   }
+
+  return {
+    version: newVersion,
+    changes
+  };
 }
 
 module.exports = {
