@@ -41,13 +41,17 @@ async function createReleaseCandidate(
       newVersion,
       pendingChangesPath,
       changelogPath,
-      false
+      true
     );
 
     if (changes === null) {
       return { changes: null };
     }
 
+    console.log("Pushing changes");
+    await exec(`git push --set-upstream origin ${branch}`);
+
+    console.log("Creating PR");
     await createPullRequest({
       changes,
       token,
@@ -58,8 +62,13 @@ async function createReleaseCandidate(
     });
   } finally {
     // return to the old branch
-    await exec(`git checkout ${currentBranch}`);
+    await exec(`git checkout -f ${currentBranch}`);
   }
+
+  return {
+    version: newVersion,
+    changes
+  };
 }
 
 module.exports = {
