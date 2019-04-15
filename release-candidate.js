@@ -41,12 +41,14 @@ async function createReleaseCandidate(
       newVersion,
       pendingChangesPath,
       changelogPath,
-      false
+      true
     );
 
     if (changes === null) {
       return { changes: null };
     }
+
+    await exec(`git push --set-upstream origin ${branch}`);
 
     await createPullRequest({
       changes,
