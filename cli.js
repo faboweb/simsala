@@ -55,20 +55,17 @@ releaseCommonOptions(program.command("release"))
 releaseCommonOptions(program.command("release-candidate"))
   .option(
     "-o, --owner <owner>",
-    "Name of the owner or organization of the repository."
+    "Name of the owner or organization of the repository. (guessed from origin if empty)"
   )
-  .option("-r, --repository <repository>", "Name of the repo.")
+  .option(
+    "-r, --repository <repository>",
+    "Name of the repo. (guessed from origin if empty)"
+  )
   .option(
     "-t, --token <github auth token>",
     "Token to authenticate to GitHub (to push chages)."
   )
   .action(async function(options) {
-    if (!options.owner || !options.repository || !options.token) {
-      console.error(
-        "To create a release candidate PR, you need to provide '--owner' and '--repository'."
-      );
-      return;
-    }
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
     if (!token) {
       console.error(

@@ -51,6 +51,31 @@ Options:
   -h, --help                             output usage information
 ```
 
+## Release Candidate
+
+In a colaborative flow you might want to create a PR for any release so your colleagues can approve the release. Simsala provides a command to create a release PR.
+
+```
+simsala release-candidate
+```
+
+Options:
+
+```
+$ simsala release-candidate -h
+Usage: release-candidate [options]
+
+Options:
+  -s, --semver <semver type>             Which version (patch|minor|mayor) your want to increase? (default: "patch")
+  -p, --pending-path <pending path>      Where are pending files located? (default: "./pending")
+  -c, --changelog-path <changelog path>  Where is the changelog located? (default: "./CHANGELOG.md")
+  -b, --beta                             Is this a beta release?
+  -o, --owner <owner>                    Name of the owner or organization of the repository. (guessed from origin if empty)
+  -r, --repository <repository>          Name of the repo. (guessed from origin if empty)
+  -t, --token <github auth token>        Token to authenticate to GitHub (to push chages).
+  -h, --help
+```
+
 ## Develop
 
 To start `simsala` in development run:
