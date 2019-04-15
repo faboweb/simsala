@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.6] - 2019-04-15
+
+### Added
+
+- Added simsala as CLI command @faboweb
+
 ## [0.0.5] - 2019-04-15
 
 ### Added
