@@ -36,18 +36,24 @@ async function createReleaseCandidate(
 
   await exec(`git checkout -B ${branch}`);
 
+  let changes;
   try {
-    const { changes } = await release(
+    const releaseInfos = await release(
       newVersion,
       pendingChangesPath,
       changelogPath,
-      false
+      true
     );
+    changes = releaseInfos.changes;
 
     if (changes === null) {
       return { changes: null };
     }
 
+    console.log("Pushing changes");
+    await exec(`git push --set-upstream origin ${branch}`);
+
+    console.log("Creating PR");
     await createPullRequest({
       changes,
       token,
@@ -58,8 +64,13 @@ async function createReleaseCandidate(
     });
   } finally {
     // return to the old branch
-    await exec(`git checkout ${currentBranch}`);
+    await exec(`git checkout -f ${currentBranch}`);
   }
+
+  return {
+    version: newVersion,
+    changes
+  };
 }
 
 module.exports = {
