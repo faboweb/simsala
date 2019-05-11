@@ -3,14 +3,21 @@ const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
 const axios = require("axios");
 
-async function createPullRequest({ changes, tag, head, owner, repo, token }) {
+async function createPullRequest({
+  textContent,
+  tag,
+  head,
+  owner,
+  repo,
+  token
+}) {
   axios.defaults.headers.common["Authorization"] = `token ${token}`;
   await axios
     .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
       title: `[Simsala] automatic release created for ${tag}`,
       head,
       base: `master`,
-      body: changes,
+      body: textContent,
       maintainer_can_modify: true
     })
     .catch(err => {
@@ -25,7 +32,8 @@ async function createReleaseCandidate(
   changelogPath,
   token,
   owner,
-  repo
+  repo,
+  message
 ) {
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
@@ -62,12 +70,15 @@ async function createReleaseCandidate(
       return { changes: null };
     }
 
+    // the final PR content will have the prepended message from the CLI and the stiched changes
+    const textContent = `${message ? `${message}\n\n` : ``}${changes}`;
+
     console.log("Pushing changes");
     await exec(`git push --set-upstream origin ${branch}`);
 
     console.log("Creating PR");
     await createPullRequest({
-      changes,
+      textContent,
       token,
       tag,
       head: branch,

@@ -65,6 +65,10 @@ releaseCommonOptions(program.command("release-candidate"))
     "-t, --token <github auth token>",
     "Token to authenticate to GitHub (to push chages)."
   )
+  .option(
+    "-m, --message <message>",
+    "Message to prepend to the changes in the release PR description."
+  )
   .action(async function(options) {
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
     if (!token) {
@@ -80,7 +84,8 @@ releaseCommonOptions(program.command("release-candidate"))
       options.changelogPath,
       options.token,
       options.owner,
-      options.repository
+      options.repository,
+      options.message
     );
 
     if (!changes) {
