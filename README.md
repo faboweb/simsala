@@ -75,21 +75,6 @@ Options:
   -o, --owner <owner>                    Name of the owner or organization of the repository. (guessed from origin if empty)
   -r, --repository <repository>          Name of the repo. (guessed from origin if empty)
   -t, --token <github auth token>        Token to authenticate to GitHub (to push chages).
+  -m, --message <message>                Message to prepend to the changes in the release PR description.
   -h, --help
-```
-
-## Develop
-
-To start `simsala` in development run:
-
-```
-yarn start
-```
-
-## Test
-
-To test `simsala` run:
-
-```
-yarn test
 ```
