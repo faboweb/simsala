@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.7] - 2019-05-16
+
+### Added
+
+- Added the possibility to add a leading message to release candidates @faboweb
+- Added new categories for development changes @faboweb
+
 ## [0.0.6] - 2019-04-15
 
 ### Added
