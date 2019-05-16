@@ -33,6 +33,14 @@ const ask = async () => {
         {
           name: `Deprecation of unused code/feature`,
           value: `Deprecated`
+        },
+        {
+          name: `Refactoring or code deprecation`,
+          value: `Code Improvements`
+        },
+        {
+          name: `Addition of coding tools, repository restructuring, et al`,
+          value: `Repository`
         }
       ]
     },

@@ -56,6 +56,8 @@ function beautifyChanges(changes) {
   output = addCategory(output, `Fixed`, grouped);
   output = addCategory(output, `Security`, grouped);
   output = addCategory(output, `Deprecated`, grouped);
+  output = addCategory(output, `Code Improvements`, grouped);
+  output = addCategory(output, `Repository`, grouped);
 
   return output.trim();
 }
