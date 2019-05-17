@@ -17,8 +17,8 @@ const releaseCommonOptions = command =>
   command
     .option(
       "-s, --semver <semver type>",
-      "Which version (patch|minor|mayor) your want to increase?",
-      /^(patch|minor|mayor)$/i,
+      "Which version (patch|minor|mayor|prerelease) your want to increase?",
+      /^(patch|minor|mayor|prerelease)$/i,
       "patch"
     )
     .option(
@@ -30,8 +30,7 @@ const releaseCommonOptions = command =>
       "-c, --changelog-path <changelog path>",
       "Where is the changelog located?",
       "./CHANGELOG.md"
-    )
-    .option("-b, --beta", "Is this a beta release?", false);
+    );
 
 releaseCommonOptions(program.command("release"))
   .option(
@@ -39,20 +38,21 @@ releaseCommonOptions(program.command("release"))
     "Stage version bump changes only instead of committing them"
   )
   .action(async function(options) {
-    const newVersion = getNewVersion(options.semver, options.beta);
-    const { changes } = await release(
-      newVersion,
-      options.pendingPath,
-      options.changelogPath,
-      !options.stageOnly
-    ).catch(err => {
-      console.error(err.message);
-      return;
-    });
+    const newVersion = getNewVersion(options.semver);
+    console.log(newVersion);
+    // const { changes } = await release(
+    //   newVersion,
+    //   options.pendingPath,
+    //   options.changelogPath,
+    //   !options.stageOnly
+    // ).catch(err => {
+    //   console.error(err.message);
+    //   return;
+    // });
 
-    if (!changes) {
-      noChanges(options.pendingPath);
-    }
+    // if (!changes) {
+    //   noChanges(options.pendingPath);
+    // }
   });
 
 releaseCommonOptions(program.command("release-candidate"))

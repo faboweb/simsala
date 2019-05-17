@@ -1,16 +1,8 @@
 const { join } = require("path");
 const semver = require("semver");
 
-function incrementVersion(
-  oldVersion,
-  versionIncrementType = "patch",
-  isBetaRelease = false
-) {
-  return semver.inc(
-    oldVersion,
-    versionIncrementType,
-    isBetaRelease ? "beta" : undefined
-  );
+function incrementVersion(oldVersion, versionIncrementType = "patch") {
+  return semver.inc(oldVersion, versionIncrementType, "beta");
 }
 
 function getNewVersion(versionIncrementType, isBetaRelease) {
