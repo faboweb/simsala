@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const program = require("commander");
 const { release } = require("./release");
 const { createReleaseCandidate } = require("./release-candidate");
