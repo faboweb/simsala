@@ -39,20 +39,19 @@ releaseCommonOptions(program.command("release"))
   )
   .action(async function(options) {
     const newVersion = getNewVersion(options.semver);
-    console.log(newVersion);
-    // const { changes } = await release(
-    //   newVersion,
-    //   options.pendingPath,
-    //   options.changelogPath,
-    //   !options.stageOnly
-    // ).catch(err => {
-    //   console.error(err.message);
-    //   return;
-    // });
+    const { changes } = await release(
+      newVersion,
+      options.pendingPath,
+      options.changelogPath,
+      !options.stageOnly
+    ).catch(err => {
+      console.error(err.message);
+      return;
+    });
 
-    // if (!changes) {
-    //   noChanges(options.pendingPath);
-    // }
+    if (!changes) {
+      noChanges(options.pendingPath);
+    }
   });
 
 releaseCommonOptions(program.command("release-candidate"))
