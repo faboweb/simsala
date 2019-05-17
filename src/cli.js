@@ -45,7 +45,10 @@ releaseCommonOptions(program.command("release"))
       options.pendingPath,
       options.changelogPath,
       !options.stageOnly
-    );
+    ).catch(err => {
+      console.error(err.message);
+      return;
+    });
 
     if (!changes) {
       noChanges(options.pendingPath);
@@ -86,7 +89,10 @@ releaseCommonOptions(program.command("release-candidate"))
       options.owner,
       options.repository,
       options.message
-    );
+    ).catch(err => {
+      console.error(err.message);
+      return;
+    });
 
     if (!changes) {
       noChanges(options.pendingPath);
@@ -102,7 +108,9 @@ program
   )
   .option("-s, --stage-only", "Stage changes only instead of committing them")
   .action(async function(options) {
-    logChanges(options.pendingPath, !options.stageOnly);
+    logChanges(options.pendingPath, !options.stageOnly).catch(err =>
+      console.error(err.message)
+    );
   });
 
 program
@@ -127,7 +135,7 @@ program
       options.pendingPath,
       options.rootBranch,
       options.skipBranches
-    );
+    ).catch(err => console.error(err.message));
   });
 
 // default to output help

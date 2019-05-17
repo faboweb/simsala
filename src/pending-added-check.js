@@ -8,7 +8,7 @@ async function checkPendingAdded(
 ) {
   const currentBranch = await exec("git rev-parse --abbrev-ref HEAD");
 
-  if (skippedBranches.indexOf(currentBranch) !== -1) {
+  if (skippedBranches.split(",").indexOf(currentBranch) !== -1) {
     console.log(
       "This branch is a skipped branch. Checks on updating the PENDING log are omitted."
     );
@@ -26,7 +26,9 @@ async function checkPendingAdded(
     return true;
   }
 
-  throw new Error("!! Changes not added. Please run `simsala log` !!");
+  throw new Error(
+    `!! There were no changes found at ${pendingChangesPath}. Please run \`simsala log\` !!`
+  );
 }
 
 module.exports = {
