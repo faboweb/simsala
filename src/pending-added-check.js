@@ -15,8 +15,9 @@ async function checkPendingAdded(
     return true;
   }
 
-  const changedFiles = (await exec(`git diff --name-only ${rootBranch}`))
-    .stdout;
+  const changedFiles = (await exec(
+    `git diff --name-only --diff-filter=AM ${rootBranch}`
+  )).stdout;
   const changedFilesInPending = changedFiles
     .split("\n")
     .filter(file => ("./" + file).startsWith(pendingChangesPath));
