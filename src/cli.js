@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/local/bin/ node
 
 const program = require("commander");
 const { release } = require("./release");
