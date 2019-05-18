@@ -74,7 +74,7 @@ async function createReleaseCandidate(
     const textContent = `${message ? `${message}\n\n` : ``}${changes}`;
 
     console.log("Pushing changes");
-    await exec(`git push --set-upstream origin ${branch}`);
+    await exec(`git push --force --set-upstream origin ${branch}`);
 
     console.log("Creating PR");
     await createPullRequest({
