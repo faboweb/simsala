@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.13] - 2019-05-23
+
+### Fixed
+
+- Fixed initialization of changelog due to wrong path @faboweb
+- Fixed lineendings to fix Mac support @faboweb
+
 ## [0.0.12] - 2019-05-17
 
 ### Added
