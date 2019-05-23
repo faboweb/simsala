@@ -100,7 +100,7 @@ async function release(newVersion, pendingChangesPath, changelogPath, commit) {
     console.log("No CHANGELOG.md was found. Creating it.");
     fs.writeFileSync(
       changelogPath,
-      fs.readFileSync(join(__dirname, `CHANGELOG.template.md`), `utf8`),
+      fs.readFileSync(join(__dirname, `../CHANGELOG.template.md`), `utf8`),
       "utf8"
     );
   }
