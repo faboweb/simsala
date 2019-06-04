@@ -42,7 +42,10 @@ function beautifyChanges(changes) {
     .filter(line => line !== "");
 
   const categorized = lines.map(line => {
-    const matches = /\[(\w+)\] (.+)/.exec(line);
+    const matches = /\[(.+)\] (.+)/.exec(line);
+    if (!matches || matches.length === 0) {
+      throw new Error(`Broken changelog with line: ${line}`);
+    }
     return {
       type: matches[1],
       content: matches[2]
