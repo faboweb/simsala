@@ -75,6 +75,8 @@ async function createReleaseCandidate(
 
     console.log("Pushing changes");
     await exec(`git push --force --set-upstream origin ${branch}`);
+    console.log("Pushing tags");
+    await exec(`git push origin --tags`);
 
     console.log("Creating PR");
     await createPullRequest({
