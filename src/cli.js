@@ -134,7 +134,10 @@ program
       options.pendingPath,
       options.rootBranch,
       options.skipBranches
-    ).catch(err => console.error(err.message));
+    ).catch(err => {
+      console.error(err.message);
+      process.exit(1);
+    });
   });
 
 // default to output help

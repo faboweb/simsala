@@ -16,7 +16,7 @@ async function checkPendingAdded(
   }
 
   const changedFiles = (await exec(
-    `git diff --name-only --diff-filter=AM ${rootBranch}`
+    `git diff --name-only --diff-filter=A ${rootBranch}`
   )).stdout;
   const changedFilesInPending = changedFiles
     .split("\n")
