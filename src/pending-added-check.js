@@ -6,7 +6,9 @@ async function checkPendingAdded(
   rootBranch,
   skippedBranches
 ) {
-  const currentBranch = await exec("git rev-parse --abbrev-ref HEAD");
+  const currentBranch = (await exec(
+    "git rev-parse --abbrev-ref HEAD"
+  )).stdout.trim();
 
   if (skippedBranches.split(",").indexOf(currentBranch) !== -1) {
     console.log(
