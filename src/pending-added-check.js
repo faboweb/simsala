@@ -10,7 +10,6 @@ async function checkPendingAdded(
     "git rev-parse --abbrev-ref HEAD"
   )).stdout.trim();
 
-  console.log(skippedBranches.split(","), currentBranch);
   if (skippedBranches.split(",").indexOf(currentBranch) !== -1) {
     console.log(
       "This branch is a skipped branch. Checks on updating the PENDING log are omitted."
