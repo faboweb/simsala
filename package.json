@@ -1,6 +1,6 @@
 {
   "name": "simsala",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Conflict free changelogs and release management",
   "main": "src/cli.js",
   "scripts": {
