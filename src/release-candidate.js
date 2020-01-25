@@ -16,7 +16,7 @@ async function createPullRequest({
     .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
       title: `[Simsala] automatic release created for ${tag}`,
       head,
-      base: `master`,
+      base: `develop`,
       body: textContent,
       maintainer_can_modify: true
     })
