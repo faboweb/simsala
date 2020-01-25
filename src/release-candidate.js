@@ -24,6 +24,19 @@ async function createPullRequest({
       console.error(err);
       throw err;
     });
+  // also create a PR to develop to remove all the changelog files
+  await axios
+    .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
+      title: `[Simsala] automatic release created for ${tag}`,
+      head,
+      base: `develop`,
+      body: textContent,
+      maintainer_can_modify: true
+    })
+    .catch(err => {
+      console.error(err);
+      throw err;
+    });
 }
 
 async function createReleaseCandidate(
