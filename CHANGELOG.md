@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.20] - 2020-04-09
+
+### Changed
+
+- Change how release-candidate pushes to work with GitHub actions @faboweb @faboweb
+
 ## [0.0.19] - 2020-01-25
 
 ### Changed
