@@ -74,9 +74,10 @@ async function createReleaseCandidate(
     const textContent = `${message ? `${message}\n\n` : ``}${changes}`;
 
     console.log("Pushing changes");
-    await exec(`git push --force --set-upstream origin ${branch}`);
-    console.log("Pushing tags");
-    await exec(`git push origin --tags`);
+    const remote_repo = `https://simsala_bot:${token}@github.com/${owner}/${repo}.git`;
+    await exec(
+      `git push "${remote_repo}" HEAD:${branch} --follow-tags --force --tags`
+    );
 
     console.log("Creating PR");
     await createPullRequest({

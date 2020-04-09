@@ -90,7 +90,7 @@ releaseCommonOptions(program.command("release-candidate"))
       options.message
     ).catch(err => {
       console.error(err.message);
-      return;
+      return {};
     });
 
     if (!changes) {
