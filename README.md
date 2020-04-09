@@ -81,3 +81,10 @@ Options:
 ## Simple releases
 
 Simsala is designed so you can have a simple release flow. I propose setting up a GitHub Action lile you see in `.github/workflows/release.yml` that only triggers on the `release` branch. When you are ready to release just push to the `release` branch and Simsala will create a release PR for you.
+
+sh```
+git push origin develop:release
+
+```
+
+```
