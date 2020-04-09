@@ -11,6 +11,7 @@ function noChanges(pendingPath) {
   console.log(
     `No pending changes where found at ${pendingPath}. Not proceeding with release.`
   );
+  process.exit(1);
 }
 
 const releaseCommonOptions = command =>
@@ -71,6 +72,11 @@ releaseCommonOptions(program.command("release-candidate"))
     "-m, --message <message>",
     "Message to prepend to the changes in the release PR description."
   )
+  .option(
+    "-b, --target-branch <branch>",
+    "Branch the release PR is merged into.",
+    "develop"
+  )
   .action(async function(options) {
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
     if (!token) {
@@ -87,10 +93,11 @@ releaseCommonOptions(program.command("release-candidate"))
       options.token,
       options.owner,
       options.repository,
-      options.message
+      options.message,
+      options.targetBranch
     ).catch(err => {
       console.error(err.message);
-      return;
+      return {};
     });
 
     if (!changes) {

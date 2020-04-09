@@ -9,14 +9,15 @@ async function createPullRequest({
   head,
   owner,
   repo,
-  token
+  token,
+  baseBranch
 }) {
   axios.defaults.headers.common["Authorization"] = `token ${token}`;
   await axios
     .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
       title: `[Simsala] automatic release created for ${tag}`,
       head,
-      base: `develop`,
+      base: baseBranch,
       body: textContent,
       maintainer_can_modify: true
     })
@@ -33,21 +34,30 @@ async function createReleaseCandidate(
   token,
   owner,
   repo,
-  message
+  message,
+  baseBranch
 ) {
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
 
   if (!owner || !repo) {
-    console.log("Guessing GitHub repository from remote 'origin'.");
-    const origin = (await exec("git remote get-url origin")).stdout.trim();
-    const match = /https:\/\/github\.com\/(.+)\/(.+)\.git/.exec(origin);
-    if (match.length === 0) {
-      console.error("Git remote 'origin' is not a GitHub repository");
-      return { changes: null };
+    if (process.env.GITHUB_REPOSITORY) {
+      console.log(
+        "Guessing GitHub repository from remote environment variable."
+      );
+      owner = process.env.GITHUB_REPOSITORY.split("/")[0];
+      repo = process.env.GITHUB_REPOSITORY.split("/")[1];
+    } else {
+      console.log("Guessing GitHub repository from remote 'origin'.");
+      const origin = (await exec("git remote get-url origin")).stdout.trim();
+      const match = /https:\/\/github\.com\/(.+)\/(.+)\.git/.exec(origin);
+      if (match.length === 0) {
+        console.error("Git remote 'origin' is not a GitHub repository");
+        return { changes: null };
+      }
+      owner = match[1];
+      repo = match[2];
     }
-    owner = match[1];
-    repo = match[2];
   }
 
   const currentBranch = (await exec(
@@ -73,10 +83,12 @@ async function createReleaseCandidate(
     // the final PR content will have the prepended message from the CLI and the stiched changes
     const textContent = `${message ? `${message}\n\n` : ``}${changes}`;
 
-    console.log("Pushing changes");
-    await exec(`git push --force --set-upstream origin ${branch}`);
-    console.log("Pushing tags");
-    await exec(`git push origin --tags`);
+    const remote_repo = `https://simsala_bot:${token}@github.com/${owner}/${repo}.git`;
+    const pushCommand = `git push "${remote_repo}" HEAD:${branch} --set-upstream --follow-tags --force --tags`;
+    console.log("Pushing changes", pushCommand);
+    await exec(
+      `git push "${remote_repo}" HEAD:${branch} --set-upstream --follow-tags --force --tags`
+    );
 
     console.log("Creating PR");
     await createPullRequest({
@@ -85,7 +97,8 @@ async function createReleaseCandidate(
       tag,
       head: branch,
       owner,
-      repo
+      repo,
+      baseBranch
     });
   } finally {
     // return to the old branch

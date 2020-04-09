@@ -71,10 +71,13 @@ Options:
   -s, --semver <semver type>             Which version (patch|minor|mayor) your want to increase? (default: "patch")
   -p, --pending-path <pending path>      Where are pending files located? (default: "./pending")
   -c, --changelog-path <changelog path>  Where is the changelog located? (default: "./CHANGELOG.md")
-  -b, --beta                             Is this a beta release?
-  -o, --owner <owner>                    Name of the owner or organization of the repository. (guessed from origin if empty)
+  -o, --owner <owner>                    Name of the owner or organization of the repository. (guessed from origin or GitHub Actions context if empty)
   -r, --repository <repository>          Name of the repo. (guessed from origin if empty)
   -t, --token <github auth token>        Token to authenticate to GitHub (to push chages).
   -m, --message <message>                Message to prepend to the changes in the release PR description.
   -h, --help
 ```
+
+## Simple releases
+
+Simsala is designed so you can have a simple release flow. I propose setting up a GitHub Action lile you see in `.github/workflows/release.yml` that only triggers on the `release` branch. When you are ready to release just push to the `release` branch and Simsala will create a release PR for you.

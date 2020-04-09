@@ -1,0 +1,20 @@
+name: Create a release PR
+
+on:
+  push:
+    branches:
+      - release
+jobs:
+  createReleasePR:
+    name: createReleasePR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js
+        uses: actions/setup-node@master
+      - name: yarn install
+        run: yarn
+      - name: configure release bot
+        run: git config user.email "bot@simsala.de" && git config user.name "Simsala Release Bot"
+      - name: create release PR
+        run: yarn start release-candidate --semver patch --token ${{ secrets.GIT_BOT_TOKEN }}
