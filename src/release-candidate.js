@@ -39,15 +39,23 @@ async function createReleaseCandidate(
   const branch = `release-candidate/${tag}`;
 
   if (!owner || !repo) {
-    console.log("Guessing GitHub repository from remote 'origin'.");
-    const origin = (await exec("git remote get-url origin")).stdout.trim();
-    const match = /https:\/\/github\.com\/(.+)\/(.+)\.git/.exec(origin);
-    if (match.length === 0) {
-      console.error("Git remote 'origin' is not a GitHub repository");
-      return { changes: null };
+    if (process.env.GITHUB_REPOSITORY) {
+      console.log(
+        "Guessing GitHub repository from remote environment variable."
+      );
+      owner = process.env.GITHUB_REPOSITORY.split("/")[0];
+      repo = process.env.GITHUB_REPOSITORY.split("/")[1];
+    } else {
+      console.log("Guessing GitHub repository from remote 'origin'.");
+      const origin = (await exec("git remote get-url origin")).stdout.trim();
+      const match = /https:\/\/github\.com\/(.+)\/(.+)\.git/.exec(origin);
+      if (match.length === 0) {
+        console.error("Git remote 'origin' is not a GitHub repository");
+        return { changes: null };
+      }
+      owner = match[1];
+      repo = match[2];
     }
-    owner = match[1];
-    repo = match[2];
   }
 
   const currentBranch = (await exec(
