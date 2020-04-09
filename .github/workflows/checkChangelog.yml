@@ -1,0 +1,18 @@
+name: Check if changelog was edited
+
+on:
+  pull_request:
+    branches:
+      - "*"
+jobs:
+  createReleasePR:
+    name: checkChangelog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js
+        uses: actions/setup-node@master
+      - name: Add simsala
+        run: npm install simsala
+      - name: Check if changlog was updated
+        run: node node_modules/simsala/src/cli.js check
