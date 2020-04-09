@@ -9,9 +9,9 @@ jobs:
     name: checkChangelog
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v1
       - name: Use Node.js
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v1
       ## What you should use
       #   - name: Add simsala
       #     run: npm install simsala
