@@ -11,6 +11,7 @@ function noChanges(pendingPath) {
   console.log(
     `No pending changes where found at ${pendingPath}. Not proceeding with release.`
   );
+  process.exit(1);
 }
 
 const releaseCommonOptions = command =>
