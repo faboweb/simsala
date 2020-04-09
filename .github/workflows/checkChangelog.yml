@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@master
       - name: Use Node.js
         uses: actions/setup-node@master
-      - name: Add simsala
-        run: npm install simsala
+      #   - name: Add simsala
+      #     run: npm install simsala
+      #   - name: Check if changlog was updated
+      #     run: node node_modules/simsala/src/cli.js check
       - name: Check if changlog was updated
-        run: node node_modules/simsala/src/cli.js check
+        run: npm run start -- check --root-branch master
