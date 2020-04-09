@@ -73,7 +73,7 @@ releaseCommonOptions(program.command("release-candidate"))
     "Message to prepend to the changes in the release PR description."
   )
   .option(
-    "-t, --target-branch <branch>",
+    "-b, --target-branch <branch>",
     "Branch the release PR is merged into.",
     "develop"
   )
