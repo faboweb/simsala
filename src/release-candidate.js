@@ -81,10 +81,11 @@ async function createReleaseCandidate(
     // the final PR content will have the prepended message from the CLI and the stiched changes
     const textContent = `${message ? `${message}\n\n` : ``}${changes}`;
 
-    console.log("Pushing changes");
     const remote_repo = `https://simsala_bot:${token}@github.com/${owner}/${repo}.git`;
+    const pushCommand = `git push "${remote_repo}" HEAD:${branch} --set-upstream --follow-tags --force --tags`;
+    console.log("Pushing changes", pushCommand);
     await exec(
-      `git push --set-upstream "${remote_repo}" HEAD:${branch} --follow-tags --force --tags`
+      `git push "${remote_repo}" HEAD:${branch} --set-upstream --follow-tags --force --tags`
     );
 
     console.log("Creating PR");
