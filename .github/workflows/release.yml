@@ -14,9 +14,7 @@ jobs:
         uses: actions/setup-node@master
       - name: yarn install
         run: yarn
-      # - name: configure release bot
-      #   run: git config user.email "bot@lunie.io" && git config user.name "Release Lunie Bot"
-      # - name: use ssh repo
-      #   run: git config user.email "bot@lunie.io" && git config user.name "Release Lunie Bot"
+      - name: configure release bot
+        run: git config user.email "bot@simsala.de" && git config user.name "Simsala Release Bot"
       - name: create release PR
         run: yarn start release-candidate --semver patch --token ${{ secrets.GIT_BOT_TOKEN }}
