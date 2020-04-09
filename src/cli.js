@@ -72,6 +72,11 @@ releaseCommonOptions(program.command("release-candidate"))
     "-m, --message <message>",
     "Message to prepend to the changes in the release PR description."
   )
+  .option(
+    "-t, --target-branch <branch>",
+    "Branch the release PR is merged into.",
+    "develop"
+  )
   .action(async function(options) {
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
     if (!token) {
@@ -88,7 +93,8 @@ releaseCommonOptions(program.command("release-candidate"))
       options.token,
       options.owner,
       options.repository,
-      options.message
+      options.message,
+      options.targetBranch
     ).catch(err => {
       console.error(err.message);
       return {};

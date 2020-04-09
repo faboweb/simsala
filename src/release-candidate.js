@@ -9,14 +9,15 @@ async function createPullRequest({
   head,
   owner,
   repo,
-  token
+  token,
+  baseBranch
 }) {
   axios.defaults.headers.common["Authorization"] = `token ${token}`;
   await axios
     .post(`https://api.github.com/repos/${owner}/${repo}/pulls`, {
       title: `[Simsala] automatic release created for ${tag}`,
       head,
-      base: `develop`,
+      base: baseBranch,
       body: textContent,
       maintainer_can_modify: true
     })
@@ -33,7 +34,8 @@ async function createReleaseCandidate(
   token,
   owner,
   repo,
-  message
+  message,
+  baseBranch
 ) {
   const tag = `v${newVersion}`;
   const branch = `release-candidate/${tag}`;
@@ -95,7 +97,8 @@ async function createReleaseCandidate(
       tag,
       head: branch,
       owner,
-      repo
+      repo,
+      baseBranch
     });
   } finally {
     // return to the old branch
