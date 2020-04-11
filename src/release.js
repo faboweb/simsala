@@ -1,6 +1,6 @@
 const { join, resolve } = require("path");
 const fs = require("fs");
-const groupBy = require("lodash/groupBy");
+const groupBy = require("lodash.groupby");
 const { promisify } = require(`util`);
 const exec = promisify(require(`child_process`).exec);
 
