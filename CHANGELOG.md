@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.21] - 2020-04-11
+
+### Added
+
+- Added example for GitHub Action for changelog check @faboweb
+
+### Fixed
+
+- Missing dependency @faboweb
+
 ## [0.0.20] - 2020-04-09
 
 ### Changed
