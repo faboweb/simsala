@@ -55,7 +55,7 @@ Options:
 
 ## Release Candidate
 
-In a colaborative flow you might want to create a PR for any release so your colleagues can approve the release. Simsala provides a command to create a release PR. You need to provide a GitHub access token either by `--token` or via a `GITHUB_ACCESS_TOKEN` environment variable.
+In a collaborative flow you might want to create a PR for any release so your colleagues can approve the release. Simsala provides a command to create a release PR. You need to provide a GitHub access token either by `--token` or via a `GITHUB_ACCESS_TOKEN` environment variable.
 
 ```
 simsala release-candidate --token <github access token>
@@ -87,4 +87,7 @@ git push origin develop:release
 
 ```
 
+## Add a check for your PRs
+
+Every PR should have a changelog entry in it. I propose setting up a GitHub Action lile you see in `.github/workflows/checkChangelog.yml`. It will run on all the PRs and check if the changelog was added.
 ```

@@ -9,9 +9,9 @@ jobs:
     name: createReleasePR
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v1
       - name: Use Node.js
-        uses: actions/setup-node@master
+        uses: actions/setup-node@v1
       - name: yarn install
         run: yarn
       - name: configure release bot
