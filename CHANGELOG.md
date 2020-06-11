@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- SIMSALA --> <!-- DON'T DELETE, used for automatic changelog updates -->
 
+## [0.0.22] - 2020-06-11
+
+### Added
+
+- Added possibility to prefix releases @faboweb
+
 ## [0.0.21] - 2020-04-11
 
 ### Added
