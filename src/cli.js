@@ -80,12 +80,12 @@ releaseCommonOptions(program.command("release-candidate"))
   .option("-x, --tag-prefix <prefix>", "Prefix version tags")
   .action(async function(options) {
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
-    // if (!token) {
-    //   console.error(
-    //     "To create a release candidate PR, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
-    //   );
-    //   return;
-    // }
+    if (!token) {
+      console.error(
+        "To create a release candidate PR, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
+      );
+      return;
+    }
     const newVersion = getNewVersion(options.semver, options.beta);
     const { changes } = await createReleaseCandidate(
       newVersion,
