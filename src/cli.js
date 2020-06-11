@@ -77,14 +77,15 @@ releaseCommonOptions(program.command("release-candidate"))
     "Branch the release PR is merged into.",
     "develop"
   )
+  .option("-x, --tag-prefix <prefix>", "Prefix version tags")
   .action(async function(options) {
     const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
-    if (!token) {
-      console.error(
-        "To create a release candidate PR, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
-      );
-      return;
-    }
+    // if (!token) {
+    //   console.error(
+    //     "To create a release candidate PR, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
+    //   );
+    //   return;
+    // }
     const newVersion = getNewVersion(options.semver, options.beta);
     const { changes } = await createReleaseCandidate(
       newVersion,
@@ -94,7 +95,8 @@ releaseCommonOptions(program.command("release-candidate"))
       options.owner,
       options.repository,
       options.message,
-      options.targetBranch
+      options.targetBranch,
+      options.tagPrefix
     ).catch(err => {
       console.error(err.message);
       return {};

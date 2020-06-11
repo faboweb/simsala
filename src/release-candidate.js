@@ -35,9 +35,11 @@ async function createReleaseCandidate(
   owner,
   repo,
   message,
-  baseBranch
+  baseBranch,
+  tagPrefix
 ) {
-  const tag = `v${newVersion}`;
+  const tag = `${tagPrefix ? tagPrefix + "-" : ""}v${newVersion}`;
+  console.log(tag);
   const branch = `release-candidate/${tag}`;
 
   if (!owner || !repo) {
