@@ -108,7 +108,13 @@ releaseCommonOptions(program.command("release-candidate"))
     }
   });
 
-releaseCommonOptions(program.command("store-release"))
+program
+  .command("store-release")
+  .option(
+    "-c, --changelog-path <changelog path>",
+    "Where is the changelog located?",
+    "./CHANGELOG.md"
+  )
   .option(
     "-o, --owner <owner>",
     "Name of the owner or organization of the repository. (guessed from origin if empty)"
