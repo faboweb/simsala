@@ -6,6 +6,7 @@ const { createReleaseCandidate } = require("./release-candidate");
 const { logChanges } = require("./add-pending");
 const { checkPendingAdded } = require("./pending-added-check");
 const { getNewVersion } = require("./version");
+const { storeRelease } = require("./store-release");
 
 function noChanges(pendingPath) {
   console.log(
@@ -105,6 +106,46 @@ releaseCommonOptions(program.command("release-candidate"))
     if (!changes) {
       noChanges(options.pendingPath);
     }
+  });
+
+program
+  .command("store-release")
+  .option(
+    "-c, --changelog-path <changelog path>",
+    "Where is the changelog located?",
+    "./CHANGELOG.md"
+  )
+  .option(
+    "-o, --owner <owner>",
+    "Name of the owner or organization of the repository. (guessed from origin if empty)"
+  )
+  .option(
+    "-r, --repository <repository>",
+    "Name of the repo. (guessed from origin if empty)"
+  )
+  .option(
+    "-t, --token <github auth token>",
+    "Token to authenticate to GitHub (to push chages)."
+  )
+  .option("-v, --tag <tag>", "Tag for version to store in GitHub")
+  .option("-x, --tag-prefix <prefix>", "Prefix version tags")
+  .action(async function(options) {
+    const token = options.token || process.env.GITHUB_ACCESS_TOKEN;
+    if (!token) {
+      console.error(
+        "To store a release, you need to provide a GitHub access token via '--token' or by setting the environment variable GITHUB_ACCESS_TOKEN."
+      );
+      return;
+    }
+
+    await storeRelease(
+      options.tag,
+      options.tagPrefix,
+      options.changelogPath,
+      options.token,
+      options.owner,
+      options.repository
+    );
   });
 
 program
