@@ -17,7 +17,7 @@
   "author": "faboweber@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "commander": "^2.20.0",
     "inquirer": "^6.2.2",
     "lodash.groupby": "^4.6.0",
